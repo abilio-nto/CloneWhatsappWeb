@@ -12,6 +12,10 @@
     background-color: #DDD;
 }
 
+.chatListitem.active{
+    background-color: #DDD;
+}
+
 .chatListItem--avatar {
 
     width: 50px;
@@ -27,7 +31,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-bottom: 1px solid rgb(201, 201, 201);
+    border-bottom: 1px solid rgb(207, 200, 200);
     padding-right: 15px;
     margin-left: 15px;
     padding-bottom: 4px;

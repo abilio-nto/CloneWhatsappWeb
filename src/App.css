@@ -23,7 +23,7 @@ body {
   margin-top: 10px;
   flex-direction: column;
   border-right: 1px solid #f5f5f5;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 header {
@@ -96,4 +96,8 @@ header {
 
 .chatList::-webkit-scrollbar-thumb {
   background-color: rgba(0, 0, 0, 0.2);
+}
+
+.contentarea{
+  flex: 1;
 }
