@@ -9,6 +9,8 @@ import ChatIntro from "./components/ChatIntro";
 import ChatWindow from "./components/ChatWindow";
 import NewChat from "./components/NewChat";
 import Login from "./components/Login";
+import Api from "./Api";
+
 export default () => {
 
   const [chatList, setChatList] = useState([{ chatId: 1, title: "Teste Chat ", image: "https://www.w3schools.com/howto/img_avatar.png" }, { chatId: 2, title: "Teste Chat 2", image: "https://www.w3schools.com/howto/img_avatar.png" }, { chatId: 3, title: "Teste Chat 3", image: "https://www.w3schools.com/howto/img_avatar.png" },]);
@@ -26,7 +28,7 @@ export default () => {
          name: u.displayName,
          avatar: u.photoURL
       }
-
+       await Api.addUser(newUser)
       setUser(newUser)
       console.log(newUser)
   }
