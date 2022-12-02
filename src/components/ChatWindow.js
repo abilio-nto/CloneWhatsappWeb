@@ -9,7 +9,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import SendIcon from '@material-ui/icons/Send';
 import MicNoneIcon from '@material-ui/icons/MicNone';
 import EmojiPicker from "emoji-picker-react";
-export default ({user}) => {
+import Api from "../Api";
+export default ({user,data}) => {
     
     const body = useRef();
 
@@ -21,38 +22,18 @@ export default ({user}) => {
     const [emojiOpen, setEmojiOpen] = useState(false)
     const [text, setText] = useState('')
     const [listening, setListening] = useState(false)
-    const [list, setList] = useState([
-        {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"},
-         {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"}, 
-        {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"}, 
-        {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"},
-         {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"},
-         {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"}, 
-        {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"},
-         {author:123 , Body:" bla bla bla bla"},
-        {author:123 , Body:" bla bla bla bla"},
-        {author:1234 , Body:" bla bla bla bla"}
-        
-    ])
+    const [list, setList] = useState([])
+    const [users, setUsers] = useState([])
     useEffect(()=>{
-        if(body.current.scrollHeight > body.current.offsetHeight){
-            body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight
-        }
+        // if(body.current.scrollHeight > body.current.offsetHeight){
+        //     body.current.scrollTop = body.current.scrollHeight - body.current.offsetHeight
+        // }
     },[list])
+    useEffect(()=>{
+       setList([])
+       let unsub = Api.onChatContent(data.chatId, setList,setUsers);
+       return unsub;
+    },[data.chatId])
 
     const handleEmojiClick = (e, emojiObject) => {
         setText(text + e.emoji)
@@ -80,15 +61,24 @@ export default ({user}) => {
         
     }
     const handleSendClick = () => {
-        
+        if(text !== ''){
+            Api.sendMessage(data,user.id,'text', text,users)
+            setText('')
+            setEmojiOpen(false)
+        }
+    }
+    const handleinputKeyUp = (e) => {
+        if(e.keyCode == 13){
+            handleSendClick();
+        }
     }
     return (
         <div className="chatWindow">
             <div className="chatWindow--header">
 
                 <div className="chatWindow--headerinfo">
-                    <img className="chatWindow--avatar" src="https://www.w3schools.com/howto/img_avatar.png" alt="" />
-                    <div className="chatWindow--name">Abílio Neto</div>
+                    <img className="chatWindow--avatar" src={data.image} alt="" />
+                    <div className="chatWindow--name">{data.title}</div>
                 </div>
                 <div className="chatWindow--headerbuttons">
                     <div className="chatWindow--btn">
@@ -139,6 +129,7 @@ export default ({user}) => {
                         placeholder="Digite uma mensagem"
                         value={text}
                         onChange={e => setText(e.target.value)}
+                        onKeyUp={handleinputKeyUp}
                     />
 
                 </div>

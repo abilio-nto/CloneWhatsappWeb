@@ -13,7 +13,7 @@ import Api from "./Api";
 
 export default () => {
 
-  const [chatList, setChatList] = useState([{ chatId: 1, title: "Teste Chat ", image: "https://www.w3schools.com/howto/img_avatar.png" }, { chatId: 2, title: "Teste Chat 2", image: "https://www.w3schools.com/howto/img_avatar.png" }, { chatId: 3, title: "Teste Chat 3", image: "https://www.w3schools.com/howto/img_avatar.png" },]);
+  const [chatList, setChatList] = useState([]);
   const [activeChat, setActiveChat] = useState({})
   const [user, setUser] = useState(null)
   const [showNewChat, setShowNewChat] = useState(false)
@@ -21,6 +21,13 @@ export default () => {
   const handleNewChat = ()=>{
     setShowNewChat(true)
   }
+
+  useEffect(()=>{
+    if(user !== null){
+        let unsub =  Api.onChatList(user.id, setChatList);
+        return unsub;
+    }
+  },[user])
 
   const handleLoginData = async (u) =>{
       let newUser= {
@@ -30,9 +37,9 @@ export default () => {
       }
        await Api.addUser(newUser)
       setUser(newUser)
-      console.log(newUser)
+     
   }
-
+  // {id:'bo0mtQXKpZbycIaxyvC8OMbERfL2', name:'Abílio Neto' , avatar:"https://graph.facebook.com/3398301133740408/picture"}
   if(user===null){
     return(<Login onReceive={handleLoginData}/>)
   }
@@ -90,7 +97,7 @@ export default () => {
       <div className="contentarea">
         {console.log(activeChat)}
         {activeChat.chatId !== undefined &&
-          <ChatWindow user={user} />
+          <ChatWindow user={user} data={activeChat}/>
         }
         {activeChat.chatId === undefined &&
           <ChatIntro />
